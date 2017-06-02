@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="2.0.6" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.13.9" />
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="0.0.5-preview" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="0.0.6-preview" />
   </ItemGroup>
 
 </Project>
