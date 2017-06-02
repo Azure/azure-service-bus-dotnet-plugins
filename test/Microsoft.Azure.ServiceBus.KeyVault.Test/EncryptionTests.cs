@@ -12,15 +12,15 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
     public class EncryptionTests
     {
         [Fact]
-        public async Task TestEncryption()
+        public async Task Encryption_smoke_test()
         {
-            var payload = "hello";
+            var payload = Encoding.UTF8.GetBytes("hello");
             var password = "password";
 
             var sha256 = SHA256.Create();
             var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
 
-            var iV = await KeyVaultPlugin.GenerateInitializationVector();
+            var iV = KeyVaultPlugin.GenerateInitializationVector();
 
             var encryptedPayload = await KeyVaultPlugin.Encrypt(payload, hash, iV);
 

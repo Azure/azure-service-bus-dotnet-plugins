@@ -3,7 +3,7 @@
 
 namespace Microsoft.Azure.ServiceBus.KeyVault
 {
-    internal static class Constants
+    internal static class KeyVaultMessageHeaders
     {
         internal const string InitializationVectorPropertyName = "KeyVault-IV";
         internal const string KeyNamePropertyName = "KeyVault-KeyName";

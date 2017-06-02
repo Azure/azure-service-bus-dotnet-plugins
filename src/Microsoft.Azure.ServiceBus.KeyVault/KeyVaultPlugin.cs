@@ -8,7 +8,6 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
     using Microsoft.Azure.ServiceBus.Core;
     using System.Security.Cryptography;
     using System.IO;
-    using System.Text;
 
     /// <summary>
     /// Provides Azure KeyVault functionality for Azure Service Bus.
@@ -18,11 +17,13 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         private readonly string secretName;
         private readonly string keyVaultEndpoint;
         private KeyVaultSecretManager secretManager;
+        private byte[] initializationVector;
+        private string base64InitializationVector;
 
         /// <summary>
         /// Gets the name that is used to identify this plugin.
         /// </summary>
-        public override string Name => "KeyVaultPlugin";
+        public override string Name => "Microsoft.Azure.ServiceBus.KeyVault.KeyVaultPlugin";
 
         /// <summary>
         /// Creates a new instance of an <see cref="KeyVaultPlugin"/>.
@@ -35,30 +36,16 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
             {
                 throw new ArgumentNullException(nameof(encryptionSecretName));
             }
-
-            if (options != null)
-            {
-                if (string.IsNullOrEmpty(options.KeyVaultClientId))
-                {
-                    throw new ArgumentOutOfRangeException(nameof(options.KeyVaultClientId));
-                }
-                if (string.IsNullOrEmpty(options.KeyVaultEndpoint))
-                {
-                    throw new ArgumentOutOfRangeException(nameof(options.KeyVaultEndpoint));
-                }
-                if (string.IsNullOrEmpty(options.KeyVaultClientSecret))
-                {
-                    throw new ArgumentOutOfRangeException(nameof(options.KeyVaultClientSecret));
-                }
-            }
-            else
+            if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
             this.secretName = encryptionSecretName;
-            this.keyVaultEndpoint = options.KeyVaultEndpoint;
-            this.secretManager = new KeyVaultSecretManager(options.KeyVaultEndpoint, options.KeyVaultClientId, options.KeyVaultClientSecret);
+            this.keyVaultEndpoint = options.Endpoint;
+            this.secretManager = new KeyVaultSecretManager(options.Endpoint, options.ClientId, options.ClientSecret);
+            this.initializationVector = KeyVaultPlugin.GenerateInitializationVector();
+            this.base64InitializationVector = Convert.ToBase64String(this.initializationVector);
         }
 
         /// <summary>
@@ -70,18 +57,17 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         {
             try
             {
-                if (message.UserProperties.ContainsKey(Constants.InitializationVectorPropertyName) || message.UserProperties.ContainsKey(Constants.KeyNamePropertyName))
+                if (message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName) || message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
                 {
                     return message;
                 }
 
-                var iV = await KeyVaultPlugin.GenerateInitializationVector();
                 var secret = await secretManager.GetHashedSecret(secretName);
 
-                message.UserProperties.Add(Constants.InitializationVectorPropertyName, Convert.ToBase64String(iV));
-                message.UserProperties.Add(Constants.KeyNamePropertyName, secretName);
+                message.UserProperties.Add(KeyVaultMessageHeaders.InitializationVectorPropertyName, base64InitializationVector);
+                message.UserProperties.Add(KeyVaultMessageHeaders.KeyNamePropertyName, secretName);
 
-                message.Body = await KeyVaultPlugin.Encrypt(Encoding.UTF8.GetString(message.Body), secret, iV);
+                message.Body = await KeyVaultPlugin.Encrypt(message.Body, secret, this.initializationVector);
                 return message;
             }
             catch (Exception ex)
@@ -99,20 +85,20 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         {
             try
             {
-                if (!message.UserProperties.ContainsKey(Constants.InitializationVectorPropertyName) || !message.UserProperties.ContainsKey(Constants.KeyNamePropertyName))
+                if (!message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName) || !message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
                 {
                     return message;
                 }
 
-                var iVString = message.UserProperties[Constants.InitializationVectorPropertyName] as string;
+                var iVString = message.UserProperties[KeyVaultMessageHeaders.InitializationVectorPropertyName] as string;
                 var iV = Convert.FromBase64String(iVString);
-                var secretName = message.UserProperties[Constants.KeyNamePropertyName] as string;
+                var secretName = message.UserProperties[KeyVaultMessageHeaders.KeyNamePropertyName] as string;
 
                 var secret = await secretManager.GetHashedSecret(secretName);
 
                 var decryptedMessage = await KeyVaultPlugin.Decrypt(message.Body, secret, iV);
 
-                message.Body = Encoding.UTF8.GetBytes(decryptedMessage);
+                message.Body = decryptedMessage;
                 return message;
             }
             catch (Exception ex)
@@ -121,7 +107,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
             }
         }
 
-        internal static Task<byte[]> GenerateInitializationVector()
+        internal static byte[] GenerateInitializationVector()
         {
             byte[] initializationVector = null;
             using (var aes = Aes.Create())
@@ -129,13 +115,12 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 aes.GenerateIV();
                 initializationVector = aes.IV;
             }
-            return Task.FromResult(initializationVector);
+            return initializationVector;
         }
 
         // Taken from the examples here: https://msdn.microsoft.com/en-us/library/system.security.cryptography.aes
-        internal static Task<byte[]> Encrypt(string payload, byte[] key, byte[] initializationVector)
+        internal static async Task<byte[]> Encrypt(byte[] payload, byte[] key, byte[] initializationVector)
         {
-            byte[] encrypted;
             // Create an Aes object
             // with the specified key and IV.
             using (Aes aesAlg = Aes.Create())
@@ -143,31 +128,15 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 aesAlg.Key = key;
                 aesAlg.IV = initializationVector;
 
-                // Create an encryptor to perform the stream transform.
                 var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-                // Create the streams used for encryption.
-                using (var msEncrypt = new MemoryStream())
-                using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    using (var swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        //Write all data to the stream.
-                        swEncrypt.Write(payload);
-                    }
-                    encrypted = msEncrypt.ToArray();
-                }
+                return await PerformCryptography(encryptor, payload);
             }
-            return Task.FromResult(encrypted);
         }
 
         // Taken from the examples here: https://msdn.microsoft.com/en-us/library/system.security.cryptography.aes
-        internal static Task<string> Decrypt(byte[] payload, byte[] key, byte[] initializationVector)
+        internal static async Task<byte[]> Decrypt(byte[] payload, byte[] key, byte[] initializationVector)
         {
-            // Declare the string used to hold
-            // the decrypted text.
-            string plaintext = null;
-
             // Create an Aes object
             // with the specified key and IV.
             using (Aes aesAlg = Aes.Create())
@@ -175,21 +144,23 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 aesAlg.Key = key;
                 aesAlg.IV = initializationVector;
 
-                // Create a decrytor to perform the stream transform.
                 var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                // Create the streams used for decryption.
-                using (var msDecrypt = new MemoryStream(payload))
-                using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                using (var srDecrypt = new StreamReader(csDecrypt))
-                {
-                    // Read the decrypted bytes from the decrypting stream
-                    // and place them in a string.
-                    plaintext = srDecrypt.ReadToEnd();
-                }
-                return Task.FromResult(plaintext);
+                return await PerformCryptography(decryptor, payload);
             }
         }
 
+        private static async Task<byte[]> PerformCryptography(ICryptoTransform cryptoTransform, byte[] data)
+        {
+            // Create the streams used for encryption.
+            using (var memoryStream = new MemoryStream())
+            using (var cryptoStream = new CryptoStream(memoryStream, cryptoTransform, CryptoStreamMode.Write))
+            {
+                // Write all data to the memory stream.
+                await cryptoStream.WriteAsync(data, 0, data.Length);
+                cryptoStream.FlushFinalBlock();
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

@@ -3,26 +3,52 @@
 
 namespace Microsoft.Azure.ServiceBus.KeyVault
 {
+    using System;
+
     /// <summary>
     /// The endpoint options used to create a new <see cref="KeyVaultPlugin"/>.
     /// </summary>
     public class KeyVaultPluginOptions
     {
         /// <summary>
-        /// Gets or sets the KeyVault endpoint.
+        /// Creates a new <see cref="KeyVaultPluginOptions"/> object and validates the settings.
         /// </summary>
-        /// <remarks>The endpoint should resemble: https://{keyvault-name}.vault.azure.net/</remarks>
-        public string KeyVaultEndpoint { get; set; }
+        /// <param name="clientId">The endpoint should be a guid.</param>
+        /// <param name="endpoint">The endpoint should resemble: https://{keyvault-name}.vault.azure.net/</param>
+        /// <param name="clientSecret">The secret should be a token.</param>
+        public KeyVaultPluginOptions(string clientId, string endpoint, string clientSecret)
+        {
+            if (string.IsNullOrEmpty(clientId))
+            {
+                throw new ArgumentNullException(nameof(clientId));
+            }
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                throw new ArgumentNullException(nameof(endpoint));
+            }
+            if (string.IsNullOrEmpty(clientSecret))
+            {
+                throw new ArgumentNullException(nameof(clientSecret));
+            }
+
+            this.ClientId = clientId;
+            this.Endpoint = endpoint;
+            this.ClientSecret = clientSecret;
+        }
 
         /// <summary>
-        /// Gets or sets the KeyVaultClientId.
+        /// Gets the KeyVault endpoint.
         /// </summary>
-        /// <remarks>The endpoint should be a guid.</remarks>
-        public string KeyVaultClientId { get; set; }
+        public string Endpoint { get; }
 
         /// <summary>
-        /// Gets or sets the KeyVaultClientSecret.
+        /// Gets the KeyVault ClientId.
         /// </summary>
-        public string KeyVaultClientSecret { get; set; }
+        public string ClientId { get; }
+
+        /// <summary>
+        /// Gets the KeyVaultClientSecret.
+        /// </summary>
+        public string ClientSecret { get; }
     }
 }

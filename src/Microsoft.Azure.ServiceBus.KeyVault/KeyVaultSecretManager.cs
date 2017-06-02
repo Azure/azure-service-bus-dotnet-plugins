@@ -65,22 +65,23 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
 
         private async Task<string> GetSecretFromKeyVault(string secretName)
         {
-            var keyVaultClient = new KeyVaultClient(GetAccessToken);
-
-            string secret;
-            try
+            using (var keyVaultClient = new KeyVaultClient(GetAccessToken))
             {
-                var secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName);
-                secret = secretResult.Value;
-            }
-            catch (Exception ex)
-            {
-                throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, KeyVaultUrl), ex);
-            }
+                string secret;
+                try
+                {
+                    var secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName);
+                    secret = secretResult.Value;
+                }
+                catch (Exception ex)
+                {
+                    throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, KeyVaultUrl), ex);
+                }
 
-            keys.Add(secretName, secret);
+                keys.Add(secretName, secret);
 
-            return secret;
+                return secret;
+            }
 
             // ToDo: Add support for KeyVault service side encryption/decryption
 
