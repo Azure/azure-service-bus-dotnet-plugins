@@ -85,7 +85,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         {
             try
             {
-                if (!message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName) || !message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
+                if (!message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName)
+                    || !message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
                 {
                     return message;
                 }
