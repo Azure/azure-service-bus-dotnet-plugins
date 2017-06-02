@@ -11,7 +11,7 @@ $appProject = $projectFolder + '\src\\Microsoft.Azure.ServiceBus.KeyVault\Micros
 $testProject = $projectFolder + '\test\Microsoft.Azure.ServiceBus.KeyVault.Test\Microsoft.Azure.ServiceBus.KeyVault.Test.csproj'
 $coverageFile = $buildFolder + 'coverage.xml'
 $appNamespace = 'Microsoft.Azure.ServiceBus.KeyVault'
-$testNamespace = 'Microsoft.Azure.ServiceBus.UnitTests'
+$testNamespace = 'Microsoft.Azure.ServiceBus.KeyVault.Test'
 
 # Environment variables
 $skipCodeCoverage = if ([bool][Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/SkipCodeCoverage')) { $true } else { $false }
@@ -21,7 +21,7 @@ function Build-Solution
     Write-Host "Building projects"
 
     # Restore solution files
-    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins /t:restore /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
+    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins.sln /t:restore /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
 
     # $? Returns True or False value indicating whether previous command ended with an error.
     # This is used to throw an error that will cause the AppVeyor process to fail as expected.
@@ -31,7 +31,7 @@ function Build-Solution
     }
 
     # Build solution
-    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
+    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins.sln /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
 
     if (-not $?)
     {
