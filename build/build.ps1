@@ -14,12 +14,6 @@ $appNamespace = 'Microsoft.Azure.ServiceBus.KeyVault'
 $testNamespace = 'Microsoft.Azure.ServiceBus.UnitTests'
 
 # Environment variables
-$connectionStringVariableName = 'azure-service-bus-dotnet/ConnectionString'
-$codeCovSecret = [Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/CodeCovSecret')
-$clientSecret = [Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/ClientSecret')
-$tenantId = [Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/TenantId')
-$appId = [Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/AppId')
-$canDeploy = ([bool]$clientSecret -and [bool]$tenantId -and [bool]$appId)
 $skipCodeCoverage = if ([bool][Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/SkipCodeCoverage')) { $true } else { $false }
 
 function Build-Solution
@@ -27,7 +21,7 @@ function Build-Solution
     Write-Host "Building projects"
 
     # Restore solution files
-    &"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" Microsoft.Azure.ServiceBus.Plugins /t:restore /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
+    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins /t:restore /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
 
     # $? Returns True or False value indicating whether previous command ended with an error.
     # This is used to throw an error that will cause the AppVeyor process to fail as expected.
@@ -37,7 +31,7 @@ function Build-Solution
     }
 
     # Build solution
-    &"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" Microsoft.Azure.ServiceBus.Plugins /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
+    MSBuild.exe Microsoft.Azure.ServiceBus.Plugins /p:Configuration=$configuration /p:Platform=$platform /verbosity:minimal
 
     if (-not $?)
     {
@@ -47,63 +41,6 @@ function Build-Solution
     {
         Write-Host "Building complete."   
     }
-}
-
-function Deploy-AzureResources
-{
-    $resourceNamePrefix = 'sb-dotnet-av-'
-    Write-Host "Creating Azure resources"
-
-    Enable-AzureDataCollection -WarningAction SilentlyContinue | Out-Null
-    $buildVersion =
-    if ($isAppveyor)
-    {
-        ($env:APPVEYOR_BUILD_NUMBER + $env:APPVEYOR_JOB_NUMBER).Replace(".", "")
-    }
-    else { Get-Random }
-
-    $global:resourceGroupName = $resourceNamePrefix + $buildVersion + '-rg'
-    $namespaceName = $resourceNamePrefix + $buildVersion + '-ns'
-    
-    $location =
-    if ([bool][Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/location'))
-    {
-        [Environment]::GetEnvironmentVariable('azure-service-bus-dotnet/location')
-    } else { 'westus' }
-
-    $password = ConvertTo-SecureString -AsPlainText -Force $clientSecret
-    $credentials = New-Object `
-        -TypeName System.Management.Automation.PSCredential `
-        -ArgumentList $appId, $password
-
-    # https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authenticate-service-principal
-    Add-AzureRmAccount -Credential $credentials -ServicePrincipal -TenantId $tenantId | Out-Null
-
-    $resourceGroup = New-AzureRmResourceGroup -Name $resourceGroupName -Location $location -Force -WarningAction SilentlyContinue
-    Write-Host ("Resource group name: " + $resourceGroup.ResourceGroupName)
-
-    $armParameters = @{
-        serviceBusNamespaceName = $namespaceName;
-    }
-
-    $templatePath = $buildFolder + 'azuredeploy.json'
-
-    $settings = New-AzureRmResourceGroupDeployment `
-        -ResourceGroupName $resourceGroupName `
-        -TemplateFile $templatePath `
-        -TemplateParameterObject $armParameters `
-        -Force `
-        -WarningAction SilentlyContinue
-
-    Write-Host "Namespace: $namespaceName"
-    
-    $connectionString = $settings.Outputs.Get_Item("namespaceConnectionString").Value
-    [Environment]::SetEnvironmentVariable($connectionStringVariableName, $connectionString)
-
-    Write-Host "Completed creating Azure resources"
-
-    # Useful for debugging ARM deployments
-    # Get-AzureRmLog -CorrelationId "GUID" -DetailedOutput
 }
 
 function Run-UnitTests
@@ -155,12 +92,12 @@ function Run-UnitTests
     {
         return
     }
-    if ([bool]$codeCovSecret)
+    if ($isAppveyor)
     {
         $ENV:PATH = 'C:\\Python34;C:\\Python34\\Scripts;' + $ENV:PATH
         python -m pip install --upgrade pip
         pip install git+git://github.com/codecov/codecov-python.git
-        codecov -f $coverageFile -t $codeCovSecret -X gcov   
+        codecov -f $coverageFile -t -X gcov   
     }
     else
     {
@@ -186,38 +123,8 @@ function CopyArtifacts
     }
 }
 
-function Delete-AzureResources
-{
-    Write-Host "Deleting Azure resources"
-
-    $password = ConvertTo-SecureString -AsPlainText -Force $clientSecret
-    $credentials = New-Object `
-        -TypeName System.Management.Automation.PSCredential `
-        -ArgumentList $appId, $password
-
-    Remove-AzureRmResourceGroup -Name $resourceGroupName -WarningAction SilentlyContinue -Force | Out-Null
-
-    Write-Host "Completed deleting Azure resources"
-}
+# Run the functions
 
 Build-Solution
-if (-Not $canDeploy -and -Not [bool][Environment]::GetEnvironmentVariable($connectionStringVariableName)) {
-    return
-}
-try {
-    if ($canDeploy -and -not [bool][Environment]::GetEnvironmentVariable($connectionStringVariableName)) {
-        Deploy-AzureResources
-    }
-    if ([bool][Environment]::GetEnvironmentVariable($connectionStringVariableName)) {
-        Run-UnitTests
-        CopyArtifacts
-    }    
-}
-catch {
-	throw
-}
-finally {
-    if ($canDeploy -and $resourceGroupName) {
-        Delete-AzureResources
-    }
-}
+Run-UnitTests
+CopyArtifacts

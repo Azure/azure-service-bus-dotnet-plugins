@@ -6,17 +6,17 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
     using System;
 
     /// <summary>
-    /// The endpoint options used to create a new <see cref="KeyVaultPlugin"/>.
+    /// The endpoint settings used to create a new <see cref="KeyVaultPlugin"/>.
     /// </summary>
-    public class KeyVaultPluginOptions
+    public class KeyVaultPluginSettings
     {
         /// <summary>
-        /// Creates a new <see cref="KeyVaultPluginOptions"/> object and validates the settings.
+        /// Creates a new <see cref="KeyVaultPluginSettings"/> object and validates the settings.
         /// </summary>
         /// <param name="clientId">The endpoint should be a guid.</param>
         /// <param name="endpoint">The endpoint should resemble: https://{keyvault-name}.vault.azure.net/</param>
         /// <param name="clientSecret">The secret should be a token.</param>
-        public KeyVaultPluginOptions(string clientId, string endpoint, string clientSecret)
+        public KeyVaultPluginSettings(string clientId, string endpoint, string clientSecret)
         {
             if (string.IsNullOrEmpty(clientId))
             {

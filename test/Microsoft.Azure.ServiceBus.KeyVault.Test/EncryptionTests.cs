@@ -12,7 +12,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
     public class EncryptionTests
     {
         [Fact]
-        public async Task Encryption_smoke_test()
+        [DisplayTestMethodName]
+        public async Task SmokeTest()
         {
             var payload = Encoding.UTF8.GetBytes("hello");
             var password = "password";

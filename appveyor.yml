@@ -1,0 +1,21 @@
+version: 1.0.{build}
+skip_branch_with_pr: true
+skip_tags: true
+matrix:
+  fast_finish: true 
+image: Visual Studio 2017
+environment:
+  matrix:
+    # First build
+    - DotNetRunTime: netcoreapp1.0
+    # Second build
+    - DotNetRunTime: net46
+      azure-service-bus-dotnet/SkipCodeCoverage: true
+skip_commits:
+  files:
+    - '**/*.md'
+artifacts:
+- path: .\build\artifacts\*
+build_script:
+- ps: .\build\build.ps1
+test: off

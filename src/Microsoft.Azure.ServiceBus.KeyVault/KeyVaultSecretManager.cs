@@ -13,7 +13,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
 
     internal class KeyVaultSecretManager
     {
-        private static Dictionary<string, string> keys;
+        private static Dictionary<string, byte[]> secretCache;
         private string azureClientId;
         private string azureClientSecret;
 
@@ -36,31 +36,27 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 throw new ArgumentNullException(nameof(azureClientSecret));
             }
 
-            keys = new Dictionary<string, string>();
+            secretCache = new Dictionary<string, byte[]>();
             this.KeyVaultUrl = keyVaultUrl;
             this.azureClientId = azureClientId;
             this.azureClientSecret = azureClientSecret;
         }
 
-        internal Task<string> GetSecret(string secretName)
-        {
-            if (keys.ContainsKey(secretName))
-            {
-                return Task.FromResult(keys[secretName]);
-            }
-            return GetSecretFromKeyVault(secretName);
-        }
-
         internal async Task<byte[]> GetHashedSecret(string secretName)
         {
-            var secret = await GetSecret(secretName);
-            byte[] hashedSecret = null;
+            if (secretCache.ContainsKey(secretName))
+            {
+                return secretCache[secretName];
+            }
+
+            var secret = await GetSecretFromKeyVault(secretName);
             using (var sha256 = SHA256.Create())
             {
                 var secretAsBytes = Encoding.UTF8.GetBytes(secret);
-                hashedSecret = sha256.ComputeHash(secretAsBytes);
+                var hashedSecret = sha256.ComputeHash(secretAsBytes);
+                secretCache.Add(secretName, hashedSecret);
+                return hashedSecret;
             }
-            return hashedSecret;
         }
 
         private async Task<string> GetSecretFromKeyVault(string secretName)
@@ -77,8 +73,6 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 {
                     throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, KeyVaultUrl), ex);
                 }
-
-                keys.Add(secretName, secret);
 
                 return secret;
             }

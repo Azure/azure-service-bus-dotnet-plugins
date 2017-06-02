@@ -29,8 +29,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         /// Creates a new instance of an <see cref="KeyVaultPlugin"/>.
         /// </summary>
         /// <param name="encryptionSecretName">The name of the secret used to encrypt / decrypt messages.</param>
-        /// <param name="options">The <see cref="KeyVaultPluginOptions"/> used to create a new instance.</param>
-        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginOptions options)
+        /// <param name="options">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
+        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginSettings options)
         {
             if (string.IsNullOrEmpty(encryptionSecretName))
             {
@@ -93,6 +93,10 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 var iVString = message.UserProperties[KeyVaultMessageHeaders.InitializationVectorPropertyName] as string;
                 var iV = Convert.FromBase64String(iVString);
                 var secretName = message.UserProperties[KeyVaultMessageHeaders.KeyNamePropertyName] as string;
+
+                // Remove properties before giving the message back
+                message.UserProperties.Remove(KeyVaultMessageHeaders.InitializationVectorPropertyName);
+                message.UserProperties.Remove(KeyVaultMessageHeaders.KeyNamePropertyName);
 
                 var secret = await secretManager.GetHashedSecret(secretName);
 
