@@ -7,5 +7,6 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
     {
         internal const string InitializationVectorPropertyName = "KeyVault-IV";
         internal const string KeyNamePropertyName = "KeyVault-KeyName";
+        internal const string KeyVersionPropertyName = "KeyVault-KeyVersion";
     }
 }
