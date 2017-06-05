@@ -1,14 +1,12 @@
 ﻿// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
 namespace Microsoft.Azure.ServiceBus.MessageId.Test
 {
-    using System.Text;
+    using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
-    using Microsoft.Azure.ServiceBus.KeyVault.Test;
     using Xunit;
+    using Microsoft.Azure.ServiceBus.Test.Shared;
 
     public class When_MessageIdPlugin_is_used
     {

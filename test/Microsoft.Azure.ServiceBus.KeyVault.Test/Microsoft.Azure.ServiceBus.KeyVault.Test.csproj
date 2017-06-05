@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.KeyVault\Microsoft.Azure.ServiceBus.KeyVault.csproj" />
+    <ProjectReference Include="..\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
