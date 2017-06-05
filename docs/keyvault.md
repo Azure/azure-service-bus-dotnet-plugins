@@ -1,6 +1,6 @@
 # Key Vault plugin for Azure Service Bus
 
-The Key Vault plugin for Azure Service Bus allows for the message body to be encrypted and decrypted by simply registering a plugin.
+The Key Vault plugin for Azure Service Bus allows for the message body to be encrypted and decrypted by registering a plugin and its accompanying settings.
 
 ## How to use
 

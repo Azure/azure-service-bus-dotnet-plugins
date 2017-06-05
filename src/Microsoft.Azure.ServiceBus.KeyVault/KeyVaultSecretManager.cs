@@ -4,17 +4,17 @@
 namespace Microsoft.Azure.ServiceBus.KeyVault
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.KeyVault;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using System.Text;
     using Microsoft.Azure.KeyVault.Models;
-    using System.Security.Cryptography;
 
     internal class KeyVaultSecretManager : ISecretManager
     {
-        private static Dictionary<string, byte[]> secretCache;
+        private static ConcurrentDictionary<string, byte[]> secretCache;
         private string azureClientId;
         private string azureClientSecret;
 
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 throw new ArgumentNullException(nameof(azureClientSecret));
             }
 
-            secretCache = new Dictionary<string, byte[]>();
+            secretCache = new ConcurrentDictionary<string, byte[]>();
             this.KeyVaultUrl = keyVaultUrl;
             this.azureClientId = azureClientId;
             this.azureClientSecret = azureClientSecret;
@@ -56,7 +56,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
             {
                 var secretAsBytes = Encoding.UTF8.GetBytes(secret);
                 var hashedSecret = sha256.ComputeHash(secretAsBytes);
-                secretCache.Add(combinedNameAndVersion, hashedSecret);
+                secretCache.GetOrAdd(combinedNameAndVersion, hashedSecret);
                 return hashedSecret;
             }
         }
