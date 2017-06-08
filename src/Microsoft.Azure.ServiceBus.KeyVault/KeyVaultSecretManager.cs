@@ -89,7 +89,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 }
                 catch (Exception ex)
                 {
-                    throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, KeyVaultUrl), ex);
+                    throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, secretVersion, KeyVaultUrl), ex);
                 }
             }
         }

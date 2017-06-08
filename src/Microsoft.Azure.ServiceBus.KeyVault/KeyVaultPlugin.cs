@@ -29,9 +29,9 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         /// Creates a new instance of an <see cref="KeyVaultPlugin"/>.
         /// </summary>
         /// <param name="encryptionSecretName">The name of the secret used to encrypt / decrypt messages.</param>
-        /// <param name="options">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
-        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginSettings options)
-            : this(encryptionSecretName, string.Empty, options)
+        /// <param name="keyVaultSettings">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
+        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginSettings keyVaultSettings)
+            : this(encryptionSecretName, string.Empty, keyVaultSettings)
         {
         }
 
@@ -40,21 +40,21 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         /// </summary>
         /// <param name="encryptionSecretName">The name of the secret used to encrypt / decrypt messages.</param>
         /// <param name="encryptionSecretVersion">The version of the secret</param>
-        /// <param name="options">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
-        public KeyVaultPlugin(string encryptionSecretName, string encryptionSecretVersion, KeyVaultPluginSettings options)
+        /// <param name="keyVaultSettings">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
+        public KeyVaultPlugin(string encryptionSecretName, string encryptionSecretVersion, KeyVaultPluginSettings keyVaultSettings)
         {
             if (string.IsNullOrEmpty(encryptionSecretName))
             {
                 throw new ArgumentNullException(nameof(encryptionSecretName));
             }
-            if (options == null)
+            if (keyVaultSettings == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentNullException(nameof(keyVaultSettings));
             }
 
             this.secretName = encryptionSecretName;
             this.secretVersion = encryptionSecretVersion;
-            this.secretManager = new KeyVaultSecretManager(options.Endpoint, options.ClientId, options.ClientSecret);
+            this.secretManager = new KeyVaultSecretManager(keyVaultSettings.Endpoint, keyVaultSettings.ClientId, keyVaultSettings.ClientSecret);
             this.initializationVector = KeyVaultPlugin.GenerateInitializationVector();
             this.base64InitializationVector = Convert.ToBase64String(this.initializationVector);
         }
