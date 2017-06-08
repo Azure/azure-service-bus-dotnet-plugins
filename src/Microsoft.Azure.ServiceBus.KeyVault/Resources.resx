@@ -127,6 +127,6 @@
     <value>An exception occured while trying to encrypt a message.</value>
   </data>
   <data name="KeyVaultKeyAcquisitionFailure" xml:space="preserve">
-    <value>Could not acquire KeyVault token. Token name: '{0}' KeyVault: '{1}'</value>
+    <value>Could not acquire KeyVault token. Token name: '{0}'. Token Version: '{1}'. KeyVault: '{1}'.</value>
   </data>
 </root>

@@ -15,3 +15,7 @@ This library is built using .NET Standard 1.3. For more information on what plat
 ## How to provide feedback
 
 See our [Contribution Guidelines](./.github/CONTRIBUTING.md).
+
+The folling plugins are included with this repository:
+
+* [Key Vault](./docs/keyvault.md)

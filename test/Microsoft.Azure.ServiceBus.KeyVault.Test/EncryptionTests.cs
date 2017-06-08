@@ -18,16 +18,34 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
             var payload = Encoding.UTF8.GetBytes("hello");
             var password = "password";
 
-            var sha256 = SHA256.Create();
-            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            byte[] hash = null;
+            using (var sha256 = SHA256.Create())
+            {
+                hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }            
 
             var iV = KeyVaultPlugin.GenerateInitializationVector();
-
             var encryptedPayload = await KeyVaultPlugin.Encrypt(payload, hash, iV);
-
             var decryptedPayload = await KeyVaultPlugin.Decrypt(encryptedPayload, hash, iV);
 
             Assert.Equal(payload, decryptedPayload);
+        }
+
+        [Fact]
+        [DisplayTestMethodName]
+        public async Task MockSecretManager()
+        {
+            var secretManager = new MockSecretManager();
+
+            var keyVaultPlugin = new KeyVaultPlugin("service-bus", secretManager);
+
+            var messageBody = Encoding.UTF8.GetBytes("hi");
+
+            var message = new Message(messageBody);
+
+            var encryptedMessage = await keyVaultPlugin.BeforeMessageSend(message);
+            var decryptedMessage = await keyVaultPlugin.AfterMessageReceive(encryptedMessage);
+            Assert.Equal(messageBody, decryptedMessage.Body);
         }
     }
 }

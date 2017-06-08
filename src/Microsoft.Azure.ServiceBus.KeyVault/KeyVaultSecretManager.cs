@@ -4,16 +4,17 @@
 namespace Microsoft.Azure.ServiceBus.KeyVault
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Security.Cryptography;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.KeyVault;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
-    using System.Text;
+    using Microsoft.Azure.KeyVault.Models;
 
-    internal class KeyVaultSecretManager
+    internal class KeyVaultSecretManager : ISecretManager
     {
-        private static Dictionary<string, byte[]> secretCache;
+        private static ConcurrentDictionary<string, byte[]> secretCache;
         private string azureClientId;
         private string azureClientSecret;
 
@@ -36,73 +37,77 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 throw new ArgumentNullException(nameof(azureClientSecret));
             }
 
-            secretCache = new Dictionary<string, byte[]>();
+            secretCache = new ConcurrentDictionary<string, byte[]>();
             this.KeyVaultUrl = keyVaultUrl;
             this.azureClientId = azureClientId;
             this.azureClientSecret = azureClientSecret;
         }
 
-        internal async Task<byte[]> GetHashedSecret(string secretName)
+        public async Task<byte[]> GetHashedSecret(string secretName, string secretVersion)
         {
-            if (secretCache.ContainsKey(secretName))
+            var combinedNameAndVersion = FormatSecretNameAndVersion(secretName, secretVersion);
+            if (secretCache.ContainsKey(combinedNameAndVersion))
             {
-                return secretCache[secretName];
+                return secretCache[combinedNameAndVersion];
             }
 
-            var secret = await GetSecretFromKeyVault(secretName);
+            var secret = await GetSecretFromKeyVault(secretName, secretVersion);
             using (var sha256 = SHA256.Create())
             {
                 var secretAsBytes = Encoding.UTF8.GetBytes(secret);
                 var hashedSecret = sha256.ComputeHash(secretAsBytes);
-                secretCache.Add(secretName, hashedSecret);
+                secretCache.GetOrAdd(combinedNameAndVersion, hashedSecret);
                 return hashedSecret;
             }
         }
 
-        private async Task<string> GetSecretFromKeyVault(string secretName)
+        internal string FormatSecretNameAndVersion(string secretName, string secretVersion)
+        {
+            if (string.IsNullOrWhiteSpace(secretVersion))
+            {
+                return secretName;
+            }
+            return string.Concat(secretName, "_", secretVersion);
+        }
+
+        private async Task<string> GetSecretFromKeyVault(string secretName, string secretVersion)
         {
             using (var keyVaultClient = new KeyVaultClient(GetAccessToken))
             {
-                string secret;
                 try
                 {
-                    var secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName);
-                    secret = secretResult.Value;
+                    SecretBundle secretResult;
+                    if (string.IsNullOrWhiteSpace(secretVersion))
+                    {
+                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName);
+                    }
+                    else
+                    {
+                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName, secretVersion);
+                    }
+                    return secretResult.Value;
                 }
                 catch (Exception ex)
                 {
-                    throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, KeyVaultUrl), ex);
+                    throw new KeyVaultPluginException(string.Format(Resources.KeyVaultKeyAcquisitionFailure, secretName, secretVersion, KeyVaultUrl), ex);
                 }
-
-                return secret;
             }
-
-            // ToDo: Add support for KeyVault service side encryption/decryption
-
-            //var encryptedMessage = await keyVaultClient.EncryptAsync(
-            //    KeyVaultUrl,
-            //    SecretName,
-            //    "secretVersion",
-            //    JsonWebKeyEncryptionAlgorithm.RSA15,
-            //    message);
         }
 
         private async Task<string> GetAccessToken(string authority, string resource, string scope)
         {
             var credential = new ClientCredential(this.azureClientId, this.azureClientSecret);
-
             var ctx = new AuthenticationContext(new Uri(authority).AbsoluteUri, false);
 
-            AuthenticationResult result;
             try
             {
-                result = await ctx.AcquireTokenAsync(resource, credential);
+                var result = await ctx.AcquireTokenAsync(resource, credential);
+                return result.AccessToken;
             }
             catch (Exception ex)
             {
                 throw new KeyVaultPluginException(string.Format(Resources.AzureAdTokenAcquisitionFailure, KeyVaultUrl), ex);
             }
-            return result.AccessToken;
         }
     }
 }

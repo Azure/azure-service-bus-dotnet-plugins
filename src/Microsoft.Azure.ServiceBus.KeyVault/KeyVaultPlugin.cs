@@ -15,8 +15,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
     public class KeyVaultPlugin : ServiceBusPlugin
     {
         private readonly string secretName;
-        private readonly string keyVaultEndpoint;
-        private KeyVaultSecretManager secretManager;
+        private readonly string secretVersion;
+        private ISecretManager secretManager;
         private byte[] initializationVector;
         private string base64InitializationVector;
 
@@ -29,21 +29,40 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         /// Creates a new instance of an <see cref="KeyVaultPlugin"/>.
         /// </summary>
         /// <param name="encryptionSecretName">The name of the secret used to encrypt / decrypt messages.</param>
-        /// <param name="options">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
-        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginSettings options)
+        /// <param name="keyVaultSettings">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
+        public KeyVaultPlugin(string encryptionSecretName, KeyVaultPluginSettings keyVaultSettings)
+            : this(encryptionSecretName, string.Empty, keyVaultSettings)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of an <see cref="KeyVaultPlugin"/>.
+        /// </summary>
+        /// <param name="encryptionSecretName">The name of the secret used to encrypt / decrypt messages.</param>
+        /// <param name="encryptionSecretVersion">The version of the secret</param>
+        /// <param name="keyVaultSettings">The <see cref="KeyVaultPluginSettings"/> used to create a new instance.</param>
+        public KeyVaultPlugin(string encryptionSecretName, string encryptionSecretVersion, KeyVaultPluginSettings keyVaultSettings)
         {
             if (string.IsNullOrEmpty(encryptionSecretName))
             {
                 throw new ArgumentNullException(nameof(encryptionSecretName));
             }
-            if (options == null)
+            if (keyVaultSettings == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentNullException(nameof(keyVaultSettings));
             }
 
             this.secretName = encryptionSecretName;
-            this.keyVaultEndpoint = options.Endpoint;
-            this.secretManager = new KeyVaultSecretManager(options.Endpoint, options.ClientId, options.ClientSecret);
+            this.secretVersion = encryptionSecretVersion;
+            this.secretManager = new KeyVaultSecretManager(keyVaultSettings.Endpoint, keyVaultSettings.ClientId, keyVaultSettings.ClientSecret);
+            this.initializationVector = KeyVaultPlugin.GenerateInitializationVector();
+            this.base64InitializationVector = Convert.ToBase64String(this.initializationVector);
+        }
+
+        internal KeyVaultPlugin(string encryptionSecretName, ISecretManager secretManager)
+        {
+            this.secretName = encryptionSecretName;
+            this.secretManager = secretManager;
             this.initializationVector = KeyVaultPlugin.GenerateInitializationVector();
             this.base64InitializationVector = Convert.ToBase64String(this.initializationVector);
         }
@@ -57,15 +76,19 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         {
             try
             {
-                if (message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName) || message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
+                // Skip encryption if message properties are already set
+                if (message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName)
+                    || message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName)
+                    || message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyVersionPropertyName))
                 {
                     return message;
                 }
 
-                var secret = await secretManager.GetHashedSecret(secretName);
+                var secret = await secretManager.GetHashedSecret(secretName, secretVersion);
 
                 message.UserProperties.Add(KeyVaultMessageHeaders.InitializationVectorPropertyName, base64InitializationVector);
                 message.UserProperties.Add(KeyVaultMessageHeaders.KeyNamePropertyName, secretName);
+                message.UserProperties.Add(KeyVaultMessageHeaders.KeyVersionPropertyName, secretVersion);
 
                 message.Body = await KeyVaultPlugin.Encrypt(message.Body, secret, this.initializationVector);
                 return message;
@@ -85,6 +108,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
         {
             try
             {
+                // Skip decryption we are missing properties for the key and IV.
                 if (!message.UserProperties.ContainsKey(KeyVaultMessageHeaders.InitializationVectorPropertyName)
                     || !message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyNamePropertyName))
                 {
@@ -99,7 +123,14 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 message.UserProperties.Remove(KeyVaultMessageHeaders.InitializationVectorPropertyName);
                 message.UserProperties.Remove(KeyVaultMessageHeaders.KeyNamePropertyName);
 
-                var secret = await secretManager.GetHashedSecret(secretName);
+                string secretVersion = string.Empty;
+                if (message.UserProperties.ContainsKey(KeyVaultMessageHeaders.KeyVersionPropertyName))
+                {
+                    secretVersion = message.UserProperties[KeyVaultMessageHeaders.KeyVersionPropertyName] as string;
+                    message.UserProperties.Remove(KeyVaultMessageHeaders.KeyVersionPropertyName);
+                }                
+
+                var secret = await secretManager.GetHashedSecret(secretName, secretVersion);
 
                 var decryptedMessage = await KeyVaultPlugin.Decrypt(message.Body, secret, iV);
 
