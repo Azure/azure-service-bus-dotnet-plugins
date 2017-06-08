@@ -7,6 +7,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus.KeyVault;
+    using Microsoft.Azure.ServiceBus.Test.Shared;
     using Xunit;
 
     public class EncryptionTests

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Azure.ServiceBus.KeyVault.Test
+namespace Microsoft.Azure.ServiceBus.Test.Shared
 {
     using System.Reflection;
     using Microsoft.Extensions.PlatformAbstractions;

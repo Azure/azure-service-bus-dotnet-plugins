@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyTitle>Microsoft.Azure.ServiceBus.KeyVault.Test</AssemblyTitle>
+    <AssemblyTitle>Microsoft.Azure.ServiceBus.MessageId.Test</AssemblyTitle>
     <TargetFrameworks>netcoreapp1.0;net46</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyName>Microsoft.Azure.ServiceBus.KeyVault.Test</AssemblyName>
+    <AssemblyName>Microsoft.Azure.ServiceBus.MessageId.Test</AssemblyName>
     <AssemblyOriginatorKeyFile>../../build/keyfile.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Microsoft.Azure.ServiceBus.KeyVault.Test</PackageId>
+    <PackageId>Microsoft.Azure.ServiceBus.MessageId.Test</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net46+win8</PackageTargetFallback>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.KeyVault\Microsoft.Azure.ServiceBus.KeyVault.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.MessageId\Microsoft.Azure.ServiceBus.MessageId.csproj" />
     <ProjectReference Include="..\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj" />
   </ItemGroup>
 
@@ -35,6 +35,5 @@
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
 
 </Project>
