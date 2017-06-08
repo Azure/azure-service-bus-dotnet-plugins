@@ -17,6 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.ServiceBus.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.ServiceBus.Test.Shared", "test\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj", "{63F75042-620C-4B08-BE41-D7EB64479A80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F7BC1BBC-D5D5-4E0A-9332-C9C841450F55}"
+	ProjectSection(SolutionItems) = preProject
+		docs\keyvault.md = docs\keyvault.md
+		docs\messageid.md = docs\messageid.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -9,7 +9,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId
 
     /// <summary>Generate Azure Service Bus <see cref="Message"/> <see cref="Message.MessageId"/> for outgoing messages.
     /// <example>
-    /// var plugin = new MessageIdPlugin(() =&gt; Guid.NewGuid().ToString(N));
+    /// var plugin = new MessageIdPlugin(() =&gt; Guid.NewGuid().ToString("N"));
     /// queueClient.RegisterPlugin(plugin);
     /// </example>
     /// </summary>
