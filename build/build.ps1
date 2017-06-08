@@ -45,17 +45,21 @@ function Build-Solution
 
 function Run-UnitTests
 {
+    Write-Host "Running unit tests."
+
     if ($skipCodeCoverage)
     {
-        dotnet test $testProject -f $runtime
-        if (-not $?)
+        foreach ($test in ls ($projectFolder + '\test\**\*.Test.csproj')) 
         {
-            throw "Unit tests failed."
+            Write-Host "Testing $test"
+            dotnet test $test -f $runtime
+            if (-not $?)
+            {
+                throw "Unit tests failed."
+            }
         }
         return;
     }
-    
-    Write-Host "Running unit tests."
     
     if (-Not (Test-Path .\nuget.exe))
     {
