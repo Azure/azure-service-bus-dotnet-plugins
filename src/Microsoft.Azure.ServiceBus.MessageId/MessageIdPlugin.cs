@@ -16,7 +16,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId
     /// <remarks>If a message ID is assigned, the value will not be replaced by the plugin.</remarks>
     public class MessageIdPlugin : ServiceBusPlugin
     {
-        private Func<string> messageIdGenerator;
+        private Func<Message, string> messageIdGenerator;
 
         /// <summary>
         /// <inheritdoc cref="Name"/>
@@ -27,7 +27,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId
         /// Create a new instance of <see cref="MessageIdPlugin"/>
         /// </summary>
         /// <param name="messageIdGenerator">Message ID generator to use.</param>
-        public MessageIdPlugin(Func<string> messageIdGenerator)
+        public MessageIdPlugin(Func<Message, string> messageIdGenerator)
         {
             this.messageIdGenerator = messageIdGenerator;
         }
@@ -44,7 +44,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId
                 return base.BeforeMessageSend(message);
             }
 
-            message.MessageId = messageIdGenerator();
+            message.MessageId = messageIdGenerator(message);
 
             return Task.FromResult(message);
         }

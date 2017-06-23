@@ -16,7 +16,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
         {
             var message = new Message();
             var generatedMessageId = Guid.Empty;
-            var plugin = new MessageIdPlugin(() =>
+            var plugin = new MessageIdPlugin(msg =>
             {
                 generatedMessageId = Guid.NewGuid();
                 return generatedMessageId.ToString("N");
@@ -36,7 +36,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
             {
                 MessageId = originalMessageId
             };
-            var plugin = new MessageIdPlugin(() => "this id should never be assigned");
+            var plugin = new MessageIdPlugin(msg => "this id should never be assigned");
 
             var result = await plugin.BeforeMessageSend(message);
 
@@ -47,9 +47,24 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
         [DisplayTestMethodName]
         public void Should_return_correct_plugin_name()
         {
-            var plugin = new MessageIdPlugin(() => "");
+            var plugin = new MessageIdPlugin(msg => "");
 
             Assert.Equal("Microsoft.Azure.ServiceBus.MessageId", plugin.Name);
+        }
+
+        [Fact]
+        [DisplayTestMethodName]
+        public async Task Should_be_able_to_set_message_id_based_on_message_data()
+        {
+            var message = new Message
+            {
+                UserProperties = { { "CustomProperty", "CustomValue" } }
+            };
+
+            var plugin = new MessageIdPlugin(msg => msg.UserProperties["CustomProperty"].ToString());
+            var result = await plugin.BeforeMessageSend(message);
+
+            Assert.Equal("CustomValue", result.MessageId);
         }
 
     }
