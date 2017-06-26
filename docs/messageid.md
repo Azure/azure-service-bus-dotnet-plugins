@@ -14,7 +14,7 @@ In order to use this plugin you will need to setup the following:
 Below is a simple example of how to use the plugin.
 
 ```csharp
-var messageIdPlugin = new MessageIdPlugin(() => Guid.NewGuid().ToString("N"));
+var messageIdPlugin = new MessageIdPlugin((msg) => Guid.NewGuid().ToString("N"));
 
 var queueClient = new QueueClient("{ServiceBusConnectionString}", "{ServiceBusEntityName}");
 queueClient.RegisterPlugin(messageIdPlugin);
