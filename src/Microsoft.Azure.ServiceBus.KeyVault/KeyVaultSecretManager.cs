@@ -51,7 +51,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 return secretCache[combinedNameAndVersion];
             }
 
-            var secret = await GetSecretFromKeyVault(secretName, secretVersion);
+            var secret = await GetSecretFromKeyVault(secretName, secretVersion).ConfigureAwait(false);
             using (var sha256 = SHA256.Create())
             {
                 var secretAsBytes = Encoding.UTF8.GetBytes(secret);
@@ -79,11 +79,11 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                     SecretBundle secretResult;
                     if (string.IsNullOrWhiteSpace(secretVersion))
                     {
-                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName);
+                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName).ConfigureAwait(false);
                     }
                     else
                     {
-                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName, secretVersion);
+                        secretResult = await keyVaultClient.GetSecretAsync(this.KeyVaultUrl, secretName, secretVersion).ConfigureAwait(false);
                     }
                     return secretResult.Value;
                 }
@@ -101,7 +101,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
 
             try
             {
-                var result = await ctx.AcquireTokenAsync(resource, credential);
+                var result = await ctx.AcquireTokenAsync(resource, credential).ConfigureAwait(false);
                 return result.AccessToken;
             }
             catch (Exception ex)

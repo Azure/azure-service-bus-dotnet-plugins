@@ -21,7 +21,7 @@ queueClient.RegisterPlugin(messageIdPlugin);
 
 var message = new Message(Encoding.UTF8.GetBytes("Message with GUID message ID"));
 
-await queueClient.SendAsync(message);
+await queueClient.SendAsync(message).ConfigureAwait(false);
 
 // message.MessageId will be assigned a GUID in a 32 digit format w/o hyphens or braces
 ```
