@@ -26,8 +26,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
             }
 
             var iV = KeyVaultPlugin.GenerateInitializationVector();
-            var encryptedPayload = await KeyVaultPlugin.Encrypt(payload, hash, iV).ConfigureAwait(false);
-            var decryptedPayload = await KeyVaultPlugin.Decrypt(encryptedPayload, hash, iV).ConfigureAwait(false);
+            var encryptedPayload = await KeyVaultPlugin.Encrypt(payload, hash, iV);
+            var decryptedPayload = await KeyVaultPlugin.Decrypt(encryptedPayload, hash, iV);
 
             Assert.Equal(payload, decryptedPayload);
         }
@@ -44,8 +44,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
 
             var message = new Message(messageBody);
 
-            var encryptedMessage = await keyVaultPlugin.BeforeMessageSend(message).ConfigureAwait(false);
-            var decryptedMessage = await keyVaultPlugin.AfterMessageReceive(encryptedMessage).ConfigureAwait(false);
+            var encryptedMessage = await keyVaultPlugin.BeforeMessageSend(message);
+            var decryptedMessage = await keyVaultPlugin.AfterMessageReceive(encryptedMessage);
             Assert.Equal(messageBody, decryptedMessage.Body);
         }
     }

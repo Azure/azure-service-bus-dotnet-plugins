@@ -22,7 +22,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
                 return generatedMessageId.ToString("N");
             });
 
-            var result = await plugin.BeforeMessageSend(message).ConfigureAwait(false);
+            var result = await plugin.BeforeMessageSend(message);
 
             Assert.Equal(generatedMessageId, Guid.Parse(result.MessageId));
         }
@@ -38,7 +38,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
             };
             var plugin = new MessageIdPlugin(msg => "this id should never be assigned");
 
-            var result = await plugin.BeforeMessageSend(message).ConfigureAwait(false);
+            var result = await plugin.BeforeMessageSend(message);
 
             Assert.Equal(originalMessageId, result.MessageId);
         }
@@ -62,7 +62,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
             };
 
             var plugin = new MessageIdPlugin(msg => msg.UserProperties["CustomProperty"].ToString());
-            var result = await plugin.BeforeMessageSend(message).ConfigureAwait(false);
+            var result = await plugin.BeforeMessageSend(message);
 
             Assert.Equal("CustomValue", result.MessageId);
         }
