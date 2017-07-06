@@ -25,3 +25,9 @@ The folling plugins are included with this repository:
 
 * [Key Vault](./src/Microsoft.Azure.ServiceBus.KeyVaultPlugin/readme.md)
 * [Message ID](./src/Microsoft.Azure.ServiceBus.MessageIdPlugin/readme.md)
+
+## Third party provided plugins
+
+* [Claim Check pattern](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin)
+
+Run by community members and as such are not covered under the Microsoft License. The applicable license for each third party plugin is listed by each third party plugin provider.
