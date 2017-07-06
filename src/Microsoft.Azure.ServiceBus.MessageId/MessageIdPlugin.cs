@@ -29,7 +29,23 @@ namespace Microsoft.Azure.ServiceBus.MessageId
         /// <param name="messageIdGenerator">Message ID generator to use.</param>
         public MessageIdPlugin(Func<Message, string> messageIdGenerator)
         {
-            this.messageIdGenerator = messageIdGenerator;
+            Guard.AgainstNull(nameof(messageIdGenerator), messageIdGenerator);
+            this.messageIdGenerator = SafeMessageIdGenerator(messageIdGenerator);
+        }
+
+        private Func<Message, string> SafeMessageIdGenerator(Func<Message, string> originalMessageIdGenerator)
+        {
+            return message =>
+            {
+                try
+                {
+                    return originalMessageIdGenerator(message);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("An exception occurred when executing message ID generator Func", exception);
+                }
+            };
         }
 
         /// <summary>
