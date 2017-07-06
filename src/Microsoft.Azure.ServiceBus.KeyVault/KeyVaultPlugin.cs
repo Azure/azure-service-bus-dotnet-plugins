@@ -84,13 +84,13 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                     return message;
                 }
 
-                var secret = await secretManager.GetHashedSecret(secretName, secretVersion);
+                var secret = await secretManager.GetHashedSecret(secretName, secretVersion).ConfigureAwait(false);
 
                 message.UserProperties.Add(KeyVaultMessageHeaders.InitializationVectorPropertyName, base64InitializationVector);
                 message.UserProperties.Add(KeyVaultMessageHeaders.KeyNamePropertyName, secretName);
                 message.UserProperties.Add(KeyVaultMessageHeaders.KeyVersionPropertyName, secretVersion);
 
-                message.Body = await KeyVaultPlugin.Encrypt(message.Body, secret, this.initializationVector);
+                message.Body = await KeyVaultPlugin.Encrypt(message.Body, secret, this.initializationVector).ConfigureAwait(false);
                 return message;
             }
             catch (Exception ex)
@@ -128,11 +128,11 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
                 {
                     secretVersion = message.UserProperties[KeyVaultMessageHeaders.KeyVersionPropertyName] as string;
                     message.UserProperties.Remove(KeyVaultMessageHeaders.KeyVersionPropertyName);
-                }                
+                }
 
-                var secret = await secretManager.GetHashedSecret(secretName, secretVersion);
+                var secret = await secretManager.GetHashedSecret(secretName, secretVersion).ConfigureAwait(false);
 
-                var decryptedMessage = await KeyVaultPlugin.Decrypt(message.Body, secret, iV);
+                var decryptedMessage = await KeyVaultPlugin.Decrypt(message.Body, secret, iV).ConfigureAwait(false);
 
                 message.Body = decryptedMessage;
                 return message;
@@ -166,7 +166,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
 
                 var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-                return await PerformCryptography(encryptor, payload);
+                return await PerformCryptography(encryptor, payload).ConfigureAwait(false);
             }
         }
 
@@ -182,7 +182,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
 
                 var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                return await PerformCryptography(decryptor, payload);
+                return await PerformCryptography(decryptor, payload).ConfigureAwait(false);
             }
         }
 
@@ -193,7 +193,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
             using (var cryptoStream = new CryptoStream(memoryStream, cryptoTransform, CryptoStreamMode.Write))
             {
                 // Write all data to the memory stream.
-                await cryptoStream.WriteAsync(data, 0, data.Length);
+                await cryptoStream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
                 cryptoStream.FlushFinalBlock();
                 return memoryStream.ToArray();
             }

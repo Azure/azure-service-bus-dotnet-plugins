@@ -27,5 +27,5 @@ queueClient.RegisterPlugin(keyVaultPlugin);
 
 var message = new Message(Encoding.UTF8.GetBytes("Super secret message"));
 
-await queueClient.SendAsync(message);
+await queueClient.SendAsync(message).ConfigureAwait(false);
 ```

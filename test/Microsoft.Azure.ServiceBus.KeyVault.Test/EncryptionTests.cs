@@ -23,7 +23,7 @@ namespace Microsoft.Azure.ServiceBus.KeyVault.Test
             using (var sha256 = SHA256.Create())
             {
                 hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }            
+            }
 
             var iV = KeyVaultPlugin.GenerateInitializationVector();
             var encryptedPayload = await KeyVaultPlugin.Encrypt(payload, hash, iV);
