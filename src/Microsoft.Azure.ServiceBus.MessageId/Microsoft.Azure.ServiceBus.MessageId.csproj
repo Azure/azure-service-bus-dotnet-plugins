@@ -26,7 +26,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.Azure.ServiceBus.MessageId.xml</DocumentationFile>
     <DebugType>full</DebugType>
-    <RootNamespace>Microsoft.Azure.ServiceBus.MessageIdPlugin</RootNamespace>
+    <RootNamespace>Microsoft.Azure.ServiceBus.Plugins</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 

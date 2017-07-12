@@ -10,7 +10,7 @@
 
 using System.Reflection;
 
-namespace Microsoft.Azure.ServiceBus.KeyVaultPlugin {
+namespace Microsoft.Azure.ServiceBus.Plugins {
     /// <summary>
     ///    A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

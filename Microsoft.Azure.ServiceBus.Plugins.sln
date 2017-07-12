@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7D8B793C-F4AC-432A-8EE7-2EE3C2B16EC1}"
 EndProject
@@ -11,16 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B18143EB-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.KeyVault.Test", "test\Microsoft.Azure.ServiceBus.KeyVault.Test\Microsoft.Azure.ServiceBus.KeyVault.Test.csproj", "{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.ServiceBus.MessageId", "src\Microsoft.Azure.ServiceBus.MessageId\Microsoft.Azure.ServiceBus.MessageId.csproj", "{7EAE339B-16CC-418C-BB17-070E10BE8283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.MessageId", "src\Microsoft.Azure.ServiceBus.MessageId\Microsoft.Azure.ServiceBus.MessageId.csproj", "{7EAE339B-16CC-418C-BB17-070E10BE8283}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.ServiceBus.MessageId.Test", "test\Microsoft.Azure.ServiceBus.MessageId.Test\Microsoft.Azure.ServiceBus.MessageId.Test.csproj", "{F2FF1744-AE2B-440D-93AB-92C5B832FF25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.MessageId.Test", "test\Microsoft.Azure.ServiceBus.MessageId.Test\Microsoft.Azure.ServiceBus.MessageId.Test.csproj", "{F2FF1744-AE2B-440D-93AB-92C5B832FF25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.ServiceBus.Test.Shared", "test\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj", "{63F75042-620C-4B08-BE41-D7EB64479A80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.Test.Shared", "test\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj", "{63F75042-620C-4B08-BE41-D7EB64479A80}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F7BC1BBC-D5D5-4E0A-9332-C9C841450F55}"
 	ProjectSection(SolutionItems) = preProject
-		docs\keyvault.md = docs\keyvault.md
-		docs\messageid.md = docs\messageid.md
 		README.md = README.md
 	EndProjectSection
 EndProject

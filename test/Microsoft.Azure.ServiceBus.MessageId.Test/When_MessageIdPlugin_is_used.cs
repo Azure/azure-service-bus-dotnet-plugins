@@ -5,6 +5,7 @@ namespace Microsoft.Azure.ServiceBus.MessageId.Test
     using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.ServiceBus;
+    using Microsoft.Azure.ServiceBus.Plugins;
     using Xunit;
     using Microsoft.Azure.ServiceBus.Test.Shared;
 

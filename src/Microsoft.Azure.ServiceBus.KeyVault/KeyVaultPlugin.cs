@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Azure.ServiceBus.KeyVaultPlugin
+namespace Microsoft.Azure.ServiceBus.Plugins
 {
     using System;
     using System.IO;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
-    using Core;
+    using Microsoft.Azure.ServiceBus.Core;
 
     /// <summary>
     /// Provides Azure KeyVault functionality for Azure Service Bus.
