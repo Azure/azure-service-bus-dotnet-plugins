@@ -3,11 +3,11 @@
 
 namespace Microsoft.Azure.ServiceBus.KeyVault.Test
 {
-    using System;
     using System.Collections.Generic;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.Azure.ServiceBus.Plugins;
 
     internal class MockSecretManager : ISecretManager
     {

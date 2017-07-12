@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Microsoft.Azure.ServiceBus MessageId extension</Description>
-    <AssemblyTitle>Microsoft.Azure.ServiceBus.MessageId</AssemblyTitle>
+    <Description>Microsoft.Azure.ServiceBus KeyVault extension</Description>
+    <AssemblyTitle>Microsoft.Azure.ServiceBus.KeyVault</AssemblyTitle>
     <VersionPrefix>0.0.1-preview</VersionPrefix>
-    <Authors>Microsoft; Sean Feldman</Authors>
+    <Authors>Microsoft</Authors>
     <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyName>Microsoft.Azure.ServiceBus.MessageId</AssemblyName>
+    <AssemblyName>Microsoft.Azure.ServiceBus.KeyVaultPlugin</AssemblyName>
     <AssemblyOriginatorKeyFile>../../build/keyfile.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Microsoft.Azure.ServiceBus.MessageId</PackageId>
+    <PackageId>Microsoft.Azure.ServiceBus.KeyVaultPlugin</PackageId>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;KeyVault;Encryption;Plugin</PackageTags>
     <PackageReleaseNotes>https://github.com/Azure/azure-service-bus-dotnet-plugins/releases</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/Azure/azure-service-bus-dotnet-plugins/master/service-bus.png</PackageIconUrl>
@@ -24,11 +24,15 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.Azure.ServiceBus.MessageId.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.Azure.ServiceBus.KeyVault.xml</DocumentationFile>
     <DebugType>full</DebugType>
+    <RootNamespace>Microsoft.Azure.ServiceBus.Plugins</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-
+  
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="2.0.6" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.13.9" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="0.0.6-preview" />
   </ItemGroup>
 

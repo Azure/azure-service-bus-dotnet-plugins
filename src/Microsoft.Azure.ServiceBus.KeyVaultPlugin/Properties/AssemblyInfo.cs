@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Microsoft.Azure.ServiceBus.KeyVault")]
+[assembly: AssemblyProduct("Microsoft.Azure.ServiceBus.KeyVaultPlugin")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
