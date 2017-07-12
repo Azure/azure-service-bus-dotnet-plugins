@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.KeyVault\Microsoft.Azure.ServiceBus.KeyVault.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.KeyVaultPlugin\Microsoft.Azure.ServiceBus.KeyVaultPlugin.csproj" />
     <ProjectReference Include="..\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj" />
   </ItemGroup>
 

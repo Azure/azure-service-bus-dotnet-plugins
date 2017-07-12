@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.MessageId\Microsoft.Azure.ServiceBus.MessageId.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.Azure.ServiceBus.MessageIdPlugin\Microsoft.Azure.ServiceBus.MessageIdPlugin.csproj" />
     <ProjectReference Include="..\Microsoft.Azure.ServiceBus.Test.Shared\Microsoft.Azure.ServiceBus.Test.Shared.csproj" />
   </ItemGroup>
 
