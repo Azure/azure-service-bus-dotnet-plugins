@@ -18,5 +18,5 @@ See our [Contribution Guidelines](./.github/CONTRIBUTING.md).
 
 The folling plugins are included with this repository:
 
-* [Key Vault](./docs/keyvault.md)
-* [Message ID](./docs/messageid.md)
+* [Key Vault](./src/Microsoft.Azure.ServiceBus.KeyVault/readme.md)
+* [Message ID](./src/Microsoft.Azure.ServiceBus.MessageId/readme.md)

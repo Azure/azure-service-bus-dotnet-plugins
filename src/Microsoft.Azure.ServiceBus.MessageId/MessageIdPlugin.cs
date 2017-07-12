@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Azure.ServiceBus.MessageId
+namespace Microsoft.Azure.ServiceBus.MessageIdPlugin
 {
     using System;
     using System.Threading.Tasks;
-    using Microsoft.Azure.ServiceBus.Core;
+    using Core;
 
     /// <summary>Generate Azure Service Bus <see cref="Message"/> <see cref="Message.MessageId"/> for outgoing messages.
     /// <example>

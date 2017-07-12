@@ -5,13 +5,13 @@
     <AssemblyTitle>Microsoft.Azure.ServiceBus.MessageId</AssemblyTitle>
     <VersionPrefix>0.0.1-preview</VersionPrefix>
     <Authors>Microsoft; Sean Feldman</Authors>
-    <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net451;netstandard1.3;uap10.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyName>Microsoft.Azure.ServiceBus.MessageId</AssemblyName>
+    <AssemblyName>Microsoft.Azure.ServiceBus.MessageIdPlugin</AssemblyName>
     <AssemblyOriginatorKeyFile>../../build/keyfile.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Microsoft.Azure.ServiceBus.MessageId</PackageId>
+    <PackageId>Microsoft.Azure.ServiceBus.MessageIdPlugin</PackageId>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;KeyVault;Encryption;Plugin</PackageTags>
     <PackageReleaseNotes>https://github.com/Azure/azure-service-bus-dotnet-plugins/releases</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/Azure/azure-service-bus-dotnet-plugins/master/service-bus.png</PackageIconUrl>
@@ -26,10 +26,26 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.Azure.ServiceBus.MessageId.xml</DocumentationFile>
     <DebugType>full</DebugType>
+    <RootNamespace>Microsoft.Azure.ServiceBus.MessageIdPlugin</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <DefineConstants>$(DefineConstants);UAP10_0</DefineConstants>
+    <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="0.0.6-preview" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform " Version="5.2.3" />
   </ItemGroup>
 
 </Project>

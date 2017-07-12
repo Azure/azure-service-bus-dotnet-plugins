@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Azure.ServiceBus.KeyVault
+namespace Microsoft.Azure.ServiceBus.KeyVaultPlugin
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,8 +9,8 @@ namespace Microsoft.Azure.ServiceBus.KeyVault
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.KeyVault;
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Microsoft.Azure.KeyVault.Models;
+    using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
     internal class KeyVaultSecretManager : ISecretManager
     {

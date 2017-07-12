@@ -7,11 +7,11 @@
     <Authors>Microsoft</Authors>
     <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AssemblyName>Microsoft.Azure.ServiceBus.KeyVault</AssemblyName>
+    <AssemblyName>Microsoft.Azure.ServiceBus.KeyVaultPlugin</AssemblyName>
     <AssemblyOriginatorKeyFile>../../build/keyfile.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Microsoft.Azure.ServiceBus.KeyVault</PackageId>
+    <PackageId>Microsoft.Azure.ServiceBus.KeyVaultPlugin</PackageId>
     <PackageTags>Azure;Service Bus;ServiceBus;.NET;AMQP;IoT;Queue;Topic;KeyVault;Encryption;Plugin</PackageTags>
     <PackageReleaseNotes>https://github.com/Azure/azure-service-bus-dotnet-plugins/releases</PackageReleaseNotes>
     <PackageIconUrl>https://raw.githubusercontent.com/Azure/azure-service-bus-dotnet-plugins/master/service-bus.png</PackageIconUrl>
@@ -26,6 +26,8 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.Azure.ServiceBus.KeyVault.xml</DocumentationFile>
     <DebugType>full</DebugType>
+    <RootNamespace>Microsoft.Azure.ServiceBus.KeyVaultPlugin</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <ItemGroup>

@@ -8,11 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Azure.ServiceBus.KeyVault {
-    using System;
-    using System.Reflection;
-    
-    
+using System.Reflection;
+
+namespace Microsoft.Azure.ServiceBus.KeyVaultPlugin {
     /// <summary>
     ///    A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

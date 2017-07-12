@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Azure.ServiceBus.KeyVault
+namespace Microsoft.Azure.ServiceBus.KeyVaultPlugin
 {
     using System.Threading.Tasks;
 
