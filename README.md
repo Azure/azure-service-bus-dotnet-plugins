@@ -4,6 +4,11 @@
 
 # Plugins for the Microsoft Azure Service Bus .NET Standard client
 
+|Build/Package|Status|
+|------|-------------|
+|Microsoft.Azure.ServiceBus.MessageIdPlugin|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Microsoft.Azure.ServiceBus.MessageIdPlugin?includePreReleases=true)](https://www.nuget.org/packages/Microsoft.Azure.ServiceBus.MessageIdPlugin/)|
+|Microsoft.Azure.ServiceBus.KeyVaultPlugin|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Microsoft.Azure.ServiceBus.KeyVaultPlugin?includePreReleases=true)](https://www.nuget.org/packages/Microsoft.Azure.ServiceBus.KeyVaultPlugin/)|
+
 This repository is for plugins for the [.NET Standard Azure Service Bus library](https://github.com/azure/azure-service-bus-dotnet).
 
 Azure Service Bus is an asynchronous messaging cloud platform that enables you to send messages between decoupled systems. Microsoft offers this feature as a service, which means that you do not need to host any of your own hardware in order to use it.
