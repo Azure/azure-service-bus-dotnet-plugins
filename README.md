@@ -28,6 +28,6 @@ The folling plugins are included with this repository:
 
 ## Third party provided plugins
 
-* [Claim Check pattern](https://www.nuget.org/packages/ServiceBus.AttachmentPlugin)
-
 Run by community members and as such are not covered under the Microsoft License. The applicable license for each third party plugin is listed by each third party plugin provider.
+
+* [Claim Check pattern](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/)
