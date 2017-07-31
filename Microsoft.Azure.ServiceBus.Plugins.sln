@@ -5,11 +5,7 @@ VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7D8B793C-F4AC-432A-8EE7-2EE3C2B16EC1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.KeyVaultPlugin", "src\Microsoft.Azure.ServiceBus.KeyVaultPlugin\Microsoft.Azure.ServiceBus.KeyVaultPlugin.csproj", "{F942A66E-A1B7-41C3-85E8-1A108D18F890}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B18143EB-5FF4-4AFC-B086-709DC9B92546}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.KeyVault.Test", "test\Microsoft.Azure.ServiceBus.KeyVault.Test\Microsoft.Azure.ServiceBus.KeyVault.Test.csproj", "{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Azure.ServiceBus.MessageIdPlugin", "src\Microsoft.Azure.ServiceBus.MessageIdPlugin\Microsoft.Azure.ServiceBus.MessageIdPlugin.csproj", "{7EAE339B-16CC-418C-BB17-070E10BE8283}"
 EndProject
@@ -28,14 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F942A66E-A1B7-41C3-85E8-1A108D18F890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F942A66E-A1B7-41C3-85E8-1A108D18F890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F942A66E-A1B7-41C3-85E8-1A108D18F890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F942A66E-A1B7-41C3-85E8-1A108D18F890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EAE339B-16CC-418C-BB17-070E10BE8283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EAE339B-16CC-418C-BB17-070E10BE8283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EAE339B-16CC-418C-BB17-070E10BE8283}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,8 +41,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F942A66E-A1B7-41C3-85E8-1A108D18F890} = {7D8B793C-F4AC-432A-8EE7-2EE3C2B16EC1}
-		{DC8DC685-DCB5-47C7-A2B7-41D31EDDCAED} = {B18143EB-5FF4-4AFC-B086-709DC9B92546}
 		{7EAE339B-16CC-418C-BB17-070E10BE8283} = {7D8B793C-F4AC-432A-8EE7-2EE3C2B16EC1}
 		{F2FF1744-AE2B-440D-93AB-92C5B832FF25} = {B18143EB-5FF4-4AFC-B086-709DC9B92546}
 		{63F75042-620C-4B08-BE41-D7EB64479A80} = {B18143EB-5FF4-4AFC-B086-709DC9B92546}

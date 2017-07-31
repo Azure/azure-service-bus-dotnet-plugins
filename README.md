@@ -7,7 +7,6 @@
 |Build/Package|Status|
 |------|-------------|
 |Microsoft.Azure.ServiceBus.MessageIdPlugin|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Microsoft.Azure.ServiceBus.MessageIdPlugin?includePreReleases=true)](https://www.nuget.org/packages/Microsoft.Azure.ServiceBus.MessageIdPlugin/)|
-|Microsoft.Azure.ServiceBus.KeyVaultPlugin|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Microsoft.Azure.ServiceBus.KeyVaultPlugin?includePreReleases=true)](https://www.nuget.org/packages/Microsoft.Azure.ServiceBus.KeyVaultPlugin/)|
 
 This repository is for plugins for the [.NET Standard Azure Service Bus library](https://github.com/azure/azure-service-bus-dotnet) owned by the Azure-Service-Bus team.
 
@@ -19,7 +18,6 @@ This library is built using .NET Standard 1.3. For more information on what plat
 
 ## Plugins included with this repository
 
-* [Key Vault](./src/Microsoft.Azure.ServiceBus.KeyVaultPlugin/readme.md)
 * [Message ID](./src/Microsoft.Azure.ServiceBus.MessageIdPlugin/readme.md)
 
 ## Third party provided plugins
