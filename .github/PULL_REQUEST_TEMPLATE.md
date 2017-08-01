@@ -1,8 +1,8 @@
 ## Description
-<!--
-Please add an informative description that covers the changes made by the pull request.
 
-If applicable, reference the bug/issue that this pull request fixes here.
--->
+This following list is used to make sure that common guidelines for a pull request are followed.
 
-Describe what [issue](./issues) this PR is solving. Refer to the [contributing guidelines](./.github/CONTRIBUTING.md) for general information.
+- **Read the [contribution guidelines](./CONTRIBUTING.md).** 
+- Make title of the pull request clear and informative. 
+- Link to appropriate [issue](https://github.com/Azure/azure-service-bus-dotnet-plugins/issues).
+- Include test coverage for the changes.
