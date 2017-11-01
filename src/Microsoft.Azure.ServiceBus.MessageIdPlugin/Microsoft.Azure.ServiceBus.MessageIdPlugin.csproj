@@ -41,7 +41,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="1.*" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.*" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
