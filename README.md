@@ -24,7 +24,8 @@ This library is built using .NET Standard 1.3. For more information on what plat
 
 Run by community members and as such are not covered under the Microsoft License. The applicable license for each third party plugin is listed by each third party plugin provider. 
 
-* [ServiceBus.AttachmentPlugin](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/) - Claim Check pattern with Azure Storage for large messages
+* [ServiceBus.AttachmentPlugin](https://github.com/SeanFeldman/ServiceBus.AttachmentPlugin/) - Claim Check pattern with Azure Storage for large messages.
+* [ServiceBus.CompressionPlugin](https://github.com/SeanFeldman/ServiceBus.CompressionPlugin) - Allows sending and receiving compressed messages.
 * [ServiceBus.LogginPlugin](https://github.com/davidrevoledo/ServiceBus.LogginPlugin/) - Message logging to Azure Storage Table or custom providers.
 
 To link your plugin to this readme, contact Azure-Service-Bus team by opening an issue in this repository. The requests will be looked on a case-by-case basis.
